@@ -1,0 +1,5 @@
+geopandas
+geoalchemy2
+sqlalchemy
+sqlalchemy-utils
+psycopg2

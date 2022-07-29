@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+
+  postgis-db:
+    image: postgis/postgis:14-3.2
+    container_name: postgis-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - postgis-db:/var/lib/postgresql/data
+      - type: bind
+        source: ./
+        target: /mnt/
+
+  postgis-client:
+    build:
+      context: ./dev-scripts/
+    container_name: postgis-client
+    ports:
+      - 8005:8005
+    volumes:
+      - type: bind
+        source: ./
+        target: /mnt/
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgis-client
+    depends_on:
+      - postgis-db
+    links:
+      - postgis-db:postgis-db
+
+volumes:
+  postgis-db:
+    driver: local
